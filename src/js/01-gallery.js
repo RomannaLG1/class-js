@@ -30,6 +30,7 @@ fetchMoviesGenres().then(response => {
   for (const elm of response.data.genres) {
     // console.log(elm);
     arrayGenres.push(elm);
+    console.log(elm);
   }
 });
 console.log(arrayGenres);
