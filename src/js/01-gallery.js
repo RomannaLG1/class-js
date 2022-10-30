@@ -1,3 +1,4 @@
+import '../css/01-gallery.css';
 import {
   fetchPopularMovies,
   fetchMovieById,
@@ -67,20 +68,40 @@ function searchMovies(evt) {
 // ==================== Render Movies Card ===================== //
 function renderMoviesCard(movie, genres) {
   const { id, poster_path, title, original_title, release_date } = movie;
-  listEl.innerHTML += ` <li class='movie-info'>
-      <a href="#" id="${id}">
-          <img
-            class='movie-poster'
-            src='https://image.tmdb.org/t/p/w500/${poster_path}'
-            alt='${title}'
-            width='395'
-            height='574'
-          />
-          <h3 class='movie-title'> ${original_title}</h3>
-          <p class='genres'>${genres.join(', ')}</p>
-          <p class='year'>${+parseInt(release_date)}</p>
-      </a>
-        </li>`;
+  listEl.innerHTML += `<li class="movie-item">
+  <a href="#" class="movie-link" id="${id}">
+    <picture>
+      <source
+        media="(min-width:1200px)"
+        srcset="https://image.tmdb.org/t/p/w500${poster_path}"
+        type="image/jpeg"
+      />
+      <source
+        media="(min-width:768px)"
+        srcset="https://image.tmdb.org/t/p/w342${poster_path}"
+        type="image/jpeg"
+      />
+      <source
+        media="(max-width:767px)"
+        srcset="https://image.tmdb.org/t/p/w342${poster_path}"
+        type="image/jpeg"
+      />
+
+      <img
+        class="movie-image"
+        src="https://image.tmdb.org/t/p/w500/${poster_path}"
+        loading="lazy"
+        alt="${title}"
+        width="395"
+        height="574"
+      />
+    </picture>
+
+    <h3 class="../css/01-gallery.css">${original_title}</h3>
+    <p class="movie-genres">${genres.join(', ')}</p>
+    <p class="movie-year">${+parseInt(release_date)}</p>
+  </a>
+</li>`;
 }
 
 // =================== Clear Movies Container =================== //
