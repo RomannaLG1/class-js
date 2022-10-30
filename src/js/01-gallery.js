@@ -1,18 +1,15 @@
-
-
-
-// Add imports above this line
-// import { skillsItems } from './gallery-items';
-// // Change code below this line
-// console.log(skillsItems);
 import {
   fetchPopularMovies,
   fetchMovieById,
   fetchMoviesGenres,
+  fetchMoviesBySearch,
 } from './api-service';
+const formEl = document.querySelector('#search-form');
 const inputEl = document.querySelector('#search-box');
 const listEl = document.querySelector('.movies-list');
-const arrayGenres = [];
+
+// ================Create array all movies genres==================//
+const arrayGenres = []; // <-- arrray all movies genres
 fetchMoviesGenres().then(response => {
   // console.log(response);
   for (const elm of response.data.genres) {
@@ -20,26 +17,57 @@ fetchMoviesGenres().then(response => {
     arrayGenres.push(elm);
   }
 });
-fetchPopularMovies(3).then(response => {
+
+// // ================ fetch popular movies for start pages ==================//
+fetchPopularMovies(4).then(response => {
+  //<-- fetchPopularMovies(3 <- number of page for pagination)
   console.log(response);
   const filmsArray = response.data.results;
   console.log(filmsArray);
   filmsArray.forEach(element => {
     const newGenresArray = [];
     const resultGenres = element.genre_ids.map(genreId => {
-      const resulIdtArray = arrayGenres.map( item => {
-        if(item.id === genreId){
+      const resulIdtArray = arrayGenres.map(item => {
+        if (item.id === genreId) {
           newGenresArray.push(item.name);
         }
-      })
-    })
+      });
+    });
     renderMoviesCard(element, newGenresArray);
   });
 });
+
+// ====================== Fetch Movie By Query =================== //
+formEl.addEventListener('submit', searchMovies);
+
+function searchMovies(evt) {
+  evt.preventDefault();
+
+  const searchToMovie = inputEl.value.trim();
+  clearMoviesContainer();
+  fetchMoviesBySearch(searchToMovie, 1).then(response => {
+    //<-- fetchPopularMovies( 1 <- number of page for pagination)
+    console.log(response);
+    const filmsArray = response.data.results;
+    console.log(filmsArray);
+    filmsArray.forEach(element => {
+      const newGenresArray = [];
+      const resultGenres = element.genre_ids.map(genreId => {
+        const resulIdtArray = arrayGenres.map(item => {
+          if (item.id === genreId) {
+            newGenresArray.push(item.name);
+          }
+        });
+      });
+      renderMoviesCard(element, newGenresArray);
+    });
+  });
+}
+
+// ==================== Render Movies Card ===================== //
 function renderMoviesCard(movie, genres) {
- const { id, poster_path, title, original_title, release_date } = movie;
-  listEl.innerHTML +=
-         ` <li class='movie-info'>
+  const { id, poster_path, title, original_title, release_date } = movie;
+  listEl.innerHTML += ` <li class='movie-info'>
       <a href="#" id="${id}">
           <img
             class='movie-poster'
@@ -53,4 +81,10 @@ function renderMoviesCard(movie, genres) {
           <p class='year'>${+parseInt(release_date)}</p>
       </a>
         </li>`;
+}
+
+// =================== Clear Movies Container =================== //
+
+function clearMoviesContainer() {
+  listEl.innerHTML = '';
 }

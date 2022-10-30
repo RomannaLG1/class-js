@@ -24,4 +24,11 @@ async function fetchMoviesGenres() {
   return genres;
 };
 
-export { fetchPopularMovies, fetchMovieById, fetchMoviesGenres };
+async function fetchMoviesBySearch(searchQuery, page) {
+  const url = `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${searchQuery}&page=${page}&include_adult=false`;
+  const response = await axios(url);
+  console.log(response);
+  return response;
+};
+
+export { fetchPopularMovies, fetchMovieById, fetchMoviesGenres, fetchMoviesBySearch};
